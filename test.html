@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cookie Banner Test Site</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 40px;
+    }
+    .banner {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      background: #f8f8f8;
+      border: 1px solid #ccc;
+      padding: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .banner button {
+      margin-left: 10px;
+      padding: 5px 10px;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+    .reject {
+      background: #ff4c4c;
+      color: white;
+    }
+    .accept {
+      background: #4caf50;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+  <h1>🍪 Cookie Banner Demo</h1>
+  <p>This page will keep generating cookie banners every 5 seconds.</p>
+  <p><b>Stats (from site’s perspective, not extension):</b></p>
+  <ul>
+    <li>Banners Created: <span id="created">0</span></li>
+    <li>Blocked (Rejected): <span id="blocked">0</span></li>
+    <li>Missed (No reject button): <span id="missed">0</span></li>
+  </ul>
+
+  <script>
+    let created = 0, blocked = 0, missed = 0;
+
+    function createBanner() {
+      created++;
+      document.getElementById("created").innerText = created;
+
+      const banner = document.createElement("div");
+      banner.className = "banner";
+
+      const msg = document.createElement("span");
+      msg.innerText = "We use cookies to improve your experience.";
+      banner.appendChild(msg);
+
+      // Randomly decide if this banner has a reject button
+      const hasReject = Math.random() > 0.3; // 70% chance
+
+      const acceptBtn = document.createElement("button");
+      acceptBtn.innerText = "Accept All";
+      acceptBtn.className = "accept";
+      acceptBtn.onclick = () => {
+        banner.remove();
+        if (!hasReject) {
+          missed++;
+          document.getElementById("missed").innerText = missed;
+        }
+      };
+      banner.appendChild(acceptBtn);
+
+      if (hasReject) {
+        const rejectBtn = document.createElement("button");
+        rejectBtn.innerText = "Reject All";
+        rejectBtn.className = "reject";
+        rejectBtn.onclick = () => {
+          banner.remove();
+          blocked++;
+          document.getElementById("blocked").innerText = blocked;
+        };
+        banner.appendChild(rejectBtn);
+      }
+
+      document.body.appendChild(banner);
+    }
+
+    // Spawn a banner every 5s
+    setInterval(createBanner, 5000);
+
+    // Start with one
+    createBanner();
+  </script>
+</body>
+</html>
